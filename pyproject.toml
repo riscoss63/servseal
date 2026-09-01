@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "servseal"
-version = "0.1.1"
+version = "0.1.2"
 description = "Behavioural attestation for deployed language models: is the model you serve the model you validated?"
 readme = "README.md"
 license = { text = "MIT" }

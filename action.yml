@@ -1,9 +1,9 @@
 name: "servseal verify"
+# Marketplace requires a description under 125 characters; the full story is in the
+# README's "Use it as a CI gate" section.
 description: >-
-  Fail the workflow when a deployed language model's behaviour drifts from its sealed
-  reference. Snapshots the candidate model over the probe set and verifies it against a
-  committed reference snapshot; exit codes gate the job (0 sealed, 3 changed, 2 not
-  comparable).
+  Fail CI when a deployed language model's behaviour drifts from its sealed reference
+  (sampling, quantisation, templates).
 author: "riscoss63"
 branding:
   icon: "shield"
