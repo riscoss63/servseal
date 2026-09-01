@@ -175,7 +175,7 @@ where top-k logprobs are blind by construction. The estimator, its error bars, t
 one-sided KL certificate and the negative results (cross-tokenizer, top-k saturation)
 are established in the sqsketch paper: *Norm-Invariance in Vector-Symbolic Encodings of
 Probability Distributions* (DOI
-[10.5281/zenodo.22214969](https://doi.org/10.5281/zenodo.22214969), code
+[10.5281/zenodo.22214968](https://doi.org/10.5281/zenodo.22214968), code
 [riscoss63/sqsketch](https://github.com/riscoss63/sqsketch)).
 
 ## Audit it
