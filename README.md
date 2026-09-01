@@ -1,5 +1,9 @@
 # servseal
 
+[![tests](https://github.com/riscoss63/servseal/actions/workflows/ci.yml/badge.svg)](https://github.com/riscoss63/servseal/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/servseal.svg)](https://pypi.org/project/servseal/)
+[![licence: MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](LICENSE)
+
 **Is the model you serve the model you validated?**
 
 A deployment changes quietly: a provider turns on a sampling filter, an inference stack
@@ -89,6 +93,36 @@ report     attestation.html
 `--report` writes a self-contained HTML attestation — verdict banner, the numbers, a
 per-position histogram, both snapshot identities and the probe hash — suitable for a
 ticket, a release artifact, or a compliance file.
+
+## Use it as a CI gate
+
+The repository doubles as a GitHub Action: seal the reference once, commit the snapshot,
+and every scheduled run fails loudly the day the deployment stops behaving like it.
+
+```yaml
+name: model-fidelity
+on:
+  schedule: [{cron: "0 6 * * 1"}]      # every Monday
+  workflow_dispatch:
+
+jobs:
+  attest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - uses: riscoss63/servseal@v0.1.0
+        with:
+          reference: seals/reference.seal.npz
+          model: ./path-or-hf-id-of-what-you-serve
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: attestation, path: attestation.html}
+```
+
+Exit codes gate the job: `0` sealed, `3` changed (job fails, attestation attached),
+`2` not comparable (a configuration error, also failing).
 
 ## What it will not do
 

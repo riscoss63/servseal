@@ -1,0 +1,60 @@
+name: "servseal verify"
+description: >-
+  Fail the workflow when a deployed language model's behaviour drifts from its sealed
+  reference. Snapshots the candidate model over the probe set and verifies it against a
+  committed reference snapshot; exit codes gate the job (0 sealed, 3 changed, 2 not
+  comparable).
+author: "riscoss63"
+branding:
+  icon: "shield"
+  color: "blue"
+
+inputs:
+  reference:
+    description: >-
+      Path to the sealed reference snapshot (.seal.npz), typically committed to the
+      repository or restored from a release artifact. Made once, with weights access:
+      `servseal snapshot <model> -o reference.seal.npz`.
+    required: true
+  model:
+    description: "The candidate deployment: a local model path or a Hugging Face id."
+    required: true
+  probes:
+    description: >-
+      Probe set: a bundled name or a file path. Must be the set the reference was made
+      on -- snapshots refuse comparison across probe sets by hash.
+    required: false
+    default: ""
+  positions:
+    description: "Probe positions to measure (must match the reference)."
+    required: false
+    default: "1500"
+  report:
+    description: "Where to write the HTML attestation."
+    required: false
+    default: "attestation.html"
+  json:
+    description: "Where to write the full verification record."
+    required: false
+    default: "verify.json"
+
+runs:
+  using: "composite"
+  steps:
+    - name: install servseal
+      shell: bash
+      run: python -m pip install --quiet "servseal[model]"
+
+    - name: snapshot the deployed model
+      shell: bash
+      run: |
+        EXTRA=""
+        if [ -n "${{ inputs.probes }}" ]; then EXTRA="--probes ${{ inputs.probes }}"; fi
+        servseal snapshot "${{ inputs.model }}" -o candidate.seal.npz \
+          --positions "${{ inputs.positions }}" $EXTRA
+
+    - name: verify against the sealed reference
+      shell: bash
+      run: |
+        servseal verify "${{ inputs.reference }}" candidate.seal.npz \
+          --report "${{ inputs.report }}" --json "${{ inputs.json }}"

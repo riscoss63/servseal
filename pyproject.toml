@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Behavioural attestation for deployed language models: is the model you serve the model you validated?"
 readme = "README.md"
 license = { text = "MIT" }
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 authors = [{ name = "riscoss63" }]
 keywords = ["llm", "attestation", "drift", "quantization", "fingerprint", "deployment"]
 classifiers = [

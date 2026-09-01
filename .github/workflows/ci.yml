@@ -1,0 +1,47 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  unit:
+    # The numpy-only surface: verdict calibration, snapshot mechanics, probe hashing,
+    # the sampling-mode statistics. The CLI end-to-end tests skip themselves here
+    # (no torch) and run in their own job below.
+    name: unit tests (${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.10", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install -e ".[dev]"
+      - run: pytest -q
+
+  cli:
+    # The product contract through subprocess on real models: exit 0 for an unchanged
+    # model, 3 for a substituted one, 2 for snapshots that measured different things,
+    # real report files out. Needs CPU torch and two small models (gpt2, distilgpt2),
+    # cached across runs.
+    name: CLI end-to-end (real models)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-models-v1
+      - run: pip install -e ".[dev]" transformers
+      - name: torch, CPU build
+        run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - run: pytest tests/test_cli_e2e.py -q
