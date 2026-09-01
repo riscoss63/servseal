@@ -7,7 +7,7 @@ recalibrated, these tests break until the change is deliberate and documented.
 """
 import pytest
 
-from modelseal.verdict import (EXIT_CHANGED, EXIT_INCOMPARABLE, EXIT_SEALED,
+from servseal.verdict import (EXIT_CHANGED, EXIT_INCOMPARABLE, EXIT_SEALED,
                                classify)
 
 

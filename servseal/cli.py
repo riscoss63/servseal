@@ -89,14 +89,14 @@ def _cmd_probes(a):
 
 def main(argv=None):
     p = argparse.ArgumentParser(
-        prog="modelseal",
+        prog="servseal",
         description="Behavioural attestation for deployed language models: "
                     "is the model you serve the model you validated?")
     sub = p.add_subparsers(dest="cmd", required=True)
 
     s = sub.add_parser("snapshot", help="fingerprint a model over the probe set")
     s.add_argument("model", help="HF model id or local path")
-    s.add_argument("-o", "--out", required=True, help="output .msl.npz file")
+    s.add_argument("-o", "--out", required=True, help="output .seal.npz file")
     s.add_argument("--probes", default=None, help="bundled set name or probe file")
     s.add_argument("--positions", type=int, default=1500)
     s.add_argument("--max-length", type=int, default=96)

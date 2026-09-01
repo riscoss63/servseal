@@ -1,12 +1,12 @@
-"""modelseal: behavioural attestation for deployed language models.
+"""servseal: behavioural attestation for deployed language models.
 
-    from modelseal import Snapshot, classify
-    from modelseal.runner import snapshot_model         # needs torch
+    from servseal import Snapshot, classify
+    from servseal.runner import snapshot_model         # needs torch
 
     ref = snapshot_model("gpt2")
-    ref.save("gpt2.msl.npz")
+    ref.save("gpt2.seal.npz")
     ...
-    verdict = classify(Snapshot.load("gpt2.msl.npz").compare(snapshot_model(served)))
+    verdict = classify(Snapshot.load("gpt2.seal.npz").compare(snapshot_model(served)))
     print(verdict.status, "-", verdict.signature)
 """
 __version__ = "0.1.0"

@@ -1,4 +1,4 @@
-# modelseal probe set: default-v1
+# servseal probe set: default-v1
 # One paragraph per block, blank-line separated. Lines starting with # are ignored.
 # This file is part of the product contract: two snapshots are comparable only if they
 # were taken on byte-identical probes, and the probe id in every snapshot is a hash of

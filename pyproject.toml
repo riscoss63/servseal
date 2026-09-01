@@ -3,7 +3,7 @@ requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "modelseal"
+name = "servseal"
 version = "0.1.0"
 description = "Behavioural attestation for deployed language models: is the model you serve the model you validated?"
 readme = "README.md"
@@ -28,13 +28,13 @@ model = ["torch>=2.0", "transformers>=4.30"]
 dev = ["pytest>=7.0"]
 
 [project.scripts]
-modelseal = "modelseal.cli:main"
+servseal = "servseal.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/riscoss63/modelseal"
+Homepage = "https://github.com/riscoss63/servseal"
 
 [tool.setuptools]
-packages = ["modelseal"]
+packages = ["servseal"]
 
 [tool.setuptools.package-data]
-modelseal = ["probes/*.txt"]
+servseal = ["probes/*.txt"]

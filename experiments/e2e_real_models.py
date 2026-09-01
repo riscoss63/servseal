@@ -32,10 +32,10 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from modelseal.probes import load_probes, probe_id           # noqa: E402
-from modelseal.runner import softmax_over_probes             # noqa: E402
-from modelseal.snapshot import Snapshot                      # noqa: E402
-from modelseal.verdict import classify                       # noqa: E402
+from servseal.probes import load_probes, probe_id           # noqa: E402
+from servseal.runner import softmax_over_probes             # noqa: E402
+from servseal.snapshot import Snapshot                      # noqa: E402
+from servseal.verdict import classify                       # noqa: E402
 
 CACHE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cache")
 POSITIONS, MAXLEN, D = 1500, 96, 256
@@ -142,7 +142,7 @@ def main():
           f"perplexity {ppl_base:.2f}, forward {dt:.0f}s")
     ref = snap_from_P(P_base, texts, "gpt2@fp32", ppl_base)
     np.save(os.path.join(CACHE, "gpt2_P_base.npy"), P_base.astype(np.float16))
-    ref.save(os.path.join(CACHE, "gpt2_ref.msl.npz"))
+    ref.save(os.path.join(CACHE, "gpt2_ref.seal.npz"))
 
     print("\n  variant                    measurements"
           + " " * 34 + "verdict")
@@ -197,7 +197,7 @@ def main():
     Pp, pppl, dt = run(pmodel, ptok, texts)
     pref = snap_from_P(Pp, texts, "pythia-160m@fp32", pppl)
     np.save(os.path.join(CACHE, "pythia_P_base.npy"), Pp.astype(np.float16))
-    pref.save(os.path.join(CACHE, "pythia_ref.msl.npz"))
+    pref.save(os.path.join(CACHE, "pythia_ref.seal.npz"))
     Pp2, pppl2, _ = run(pmodel, ptok, texts)
     show("unchanged (re-run)", pref,
          snap_from_P(Pp2, texts, "pythia-160m@fp32/rerun", pppl2), "sealed")

@@ -1,19 +1,19 @@
 """How many sampled tokens buy how much detection power, on a real model.
 
 The question a buyer of API mode asks first: my endpoint returns sampled tokens only --
-how many do I need before modelseal can tell that the provider turned on top-p 0.95?
+how many do I need before servseal can tell that the provider turned on top-p 0.95?
 This run answers it on GPT-2 distributions computed from the real model (cached by the
 e2e battery), for the two serving changes with known ground truth:
 
   top-p 0.95 ......... true mean per-position Hellinger 0.15, invisible to perplexity
   temperature 1.05 ... true mean 0.044, the hard case
 
-Protocol as in modelseal.sampler: one sampled next token per probe position per call,
+Protocol as in servseal.sampler: one sampled next token per probe position per call,
 budget spread evenly. Bands calibrated on the unchanged endpoint (reps below), false
 positives checked on held-out null draws, power on independent alternative draws.
 
 The sweep uses a vectorised sampler for speed; its statistics are asserted equal to
-modelseal.sampler.statistics on a shared stream before anything is measured, so the
+servseal.sampler.statistics on a shared stream before anything is measured, so the
 numbers below are the product's numbers, not a stand-in's.
 
     python sampling_power.py           # needs experiments/cache from e2e_real_models
@@ -28,8 +28,8 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from modelseal.sampler import _codes, sample_stream, statistics       # noqa: E402
-from modelseal.snapshot import Snapshot                               # noqa: E402
+from servseal.sampler import _codes, sample_stream, statistics       # noqa: E402
+from servseal.snapshot import Snapshot                               # noqa: E402
 
 CACHE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cache")
 BUDGETS = [1500, 5000, 15000, 50000, 150000]
@@ -100,7 +100,7 @@ def outside(s1, s2, b):
 
 def main():
     base_f = os.path.join(CACHE, "gpt2_P_base.npy")
-    ref_f = os.path.join(CACHE, "gpt2_ref.msl.npz")
+    ref_f = os.path.join(CACHE, "gpt2_ref.seal.npz")
     if not (os.path.exists(base_f) and os.path.exists(ref_f)):
         print("  run e2e_real_models.py first (it writes the cache)")
         return 1

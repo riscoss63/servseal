@@ -1,9 +1,9 @@
 """Probe determinism, and the sampling-mode statistic's basic sanity."""
 import numpy as np
 
-from modelseal.probes import load_probes, probe_id
-from modelseal.sampler import calibrate, detect, sample_stream, statistics
-from modelseal.snapshot import Snapshot
+from servseal.probes import load_probes, probe_id
+from servseal.sampler import calibrate, detect, sample_stream, statistics
+from servseal.snapshot import Snapshot
 
 
 def test_default_probes_load_and_are_stable():

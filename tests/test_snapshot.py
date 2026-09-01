@@ -7,8 +7,8 @@ tested is the product, not a stand-in.
 import numpy as np
 import pytest
 
-from modelseal.snapshot import Snapshot
-from modelseal.verdict import classify
+from servseal.snapshot import Snapshot
+from servseal.verdict import classify
 
 
 def dists(n_pos=200, vocab=400, seed=0, sharp=1.0):
@@ -23,7 +23,7 @@ def snap(P, model="ref", **kw):
 
 def test_roundtrip(tmp_path):
     s = snap(dists())
-    f = tmp_path / "x.msl.npz"
+    f = tmp_path / "x.seal.npz"
     s.save(f)
     t = Snapshot.load(f)
     assert np.array_equal(s.positions, t.positions)

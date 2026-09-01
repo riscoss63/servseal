@@ -1,21 +1,21 @@
-# modelseal
+# servseal
 
 **Is the model you serve the model you validated?**
 
 A deployment changes quietly: a provider turns on a sampling filter, an inference stack
 quantises, a template edit ships, a checkpoint is swapped. Task benchmarks are noisy and
-slow; checksums verify files, not behaviour. modelseal snapshots what a model actually
+slow; checksums verify files, not behaviour. servseal snapshots what a model actually
 *does* — the full next-token distribution over a fixed probe set, ~1 KB per position —
 and later tells you whether the deployed behaviour is still the reference, **how much**
 it moved, and **which layer** moved it.
 
 ```bash
-pip install modelseal[model]      # pulls sqsketch >= 0.3 from PyPI
+pip install servseal[model]      # pulls sqsketch >= 0.3 from PyPI
 
-modelseal snapshot gpt2 -o reference.msl.npz
+servseal snapshot gpt2 -o reference.seal.npz
 # ... deploy, quantise, migrate serving stacks, wait six months ...
-modelseal snapshot /path/to/served-model -o candidate.msl.npz
-modelseal verify reference.msl.npz candidate.msl.npz --report attestation.html
+servseal snapshot /path/to/served-model -o candidate.seal.npz
+servseal verify reference.seal.npz candidate.seal.npz --report attestation.html
 echo $?    # 0 sealed | 3 changed | 2 incomparable
 ```
 
@@ -68,7 +68,7 @@ power measured on real GPT-2 distributions (`experiments/sampling_power.py`):
 
 **Five thousand single-token completions detect both changes with power 1.00 at a 5%
 false-positive budget** — on a commercial API, a few dollars of traffic. Two designs
-failed before this one and are documented in `modelseal/sampler.py`: a one-sided "BC
+failed before this one and are documented in `servseal/sampler.py`: a one-sided "BC
 must drop" rule (power 0.10 — cutting the tail *concentrates* samples on the head and
 pushes the statistic up) and a pooled corpus-aggregate statistic (power 0.03 — one
 position's tail is another's head; pooling erases the evidence). The shipped statistic
@@ -102,7 +102,7 @@ ticket, a release artifact, or a compliance file.
 - **Certify small changes.** The certified-KL line is a one-sided bound that only bites
   on gross changes at D=256: `0` certifies nothing and must never be read as "nothing
   changed". The Hellinger measurement, not the certificate, is the detector.
-- **Judge quality.** modelseal tells you the behaviour moved, not whether it got worse.
+- **Judge quality.** servseal tells you the behaviour moved, not whether it got worse.
   A fine-tune you shipped on purpose is CHANGED/major — as it should be.
 - **See what the probes never touch.** Coverage is the probe set's; snapshot your own
   traffic domain too (`--probes yourfile.txt`). Snapshots refuse comparison across
@@ -138,7 +138,7 @@ python sampling_power.py                  # the API-mode power table, ~1 min
 
 The battery *asserts* every verdict against its ground truth and exits non-zero on any
 miss; the committed outputs in `experiments/outputs/` are what the tables above quote.
-Verdict thresholds live in `modelseal/verdict.py` with the calibration documented
+Verdict thresholds live in `servseal/verdict.py` with the calibration documented
 inline; changing them breaks tests until the documentation moves with them.
 
 ## Licence

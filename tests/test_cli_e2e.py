@@ -19,16 +19,16 @@ POS = "400"
 
 
 def run(args, **kw):
-    return subprocess.run([sys.executable, "-m", "modelseal.cli", *args],
+    return subprocess.run([sys.executable, "-m", "servseal.cli", *args],
                           capture_output=True, text=True, timeout=600, **kw)
 
 
 @pytest.fixture(scope="module")
 def snaps(tmp_path_factory):
     d = tmp_path_factory.mktemp("cli")
-    a = str(d / "ref.msl.npz")
-    b = str(d / "same.msl.npz")
-    c = str(d / "other.msl.npz")
+    a = str(d / "ref.seal.npz")
+    b = str(d / "same.seal.npz")
+    c = str(d / "other.seal.npz")
     for model, out in (("gpt2", a), ("gpt2", b), ("distilgpt2", c)):
         r = run(["snapshot", model, "-o", out, "--positions", POS])
         assert r.returncode == 0, r.stderr
@@ -58,7 +58,7 @@ def test_substituted_model_exits_3_and_reports(snaps):
 
 def test_different_probe_config_exits_2(snaps, tmp_path):
     d, a, _, _ = snaps
-    other = str(tmp_path / "d512.msl.npz")
+    other = str(tmp_path / "d512.seal.npz")
     r = run(["snapshot", "gpt2", "-o", other, "--positions", POS, "--D", "512"])
     assert r.returncode == 0, r.stderr
     r = run(["verify", a, other])
@@ -73,5 +73,5 @@ def test_probes_command():
 
 
 def test_missing_file_exits_1():
-    r = run(["verify", "no_such.msl.npz", "also_missing.msl.npz"])
+    r = run(["verify", "no_such.seal.npz", "also_missing.seal.npz"])
     assert r.returncode == 1

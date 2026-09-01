@@ -5,5 +5,5 @@ dist/
 .pytest_cache/
 # snapshots and verification runs made while trying things out; the committed
 # experiment outputs under experiments/outputs/ ARE tracked, deliberately
-*.msl.npz
+*.seal.npz
 scratch/
