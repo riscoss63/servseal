@@ -56,6 +56,26 @@ The same battery runs on a second architecture (pythia-160m): unchanged → SEAL
 snapshot is refused (`INCOMPARABLE`, exit 2) — different tokenizer, not the same
 measurement.
 
+And on a **current architecture** — Qwen2.5-0.5B, vocabulary 151,936, a far sharper
+model (median effective support ≈ 7) where a tail-blind fingerprint has the least to
+miss (`experiments/e2e_qwen.py`, committed run in `experiments/outputs/`):
+
+| deployment event | mean Hellinger | top-1 agreement | perplexity | verdict |
+|---|---:|---:|---:|---|
+| unchanged (re-run) | **0.0000** | 1.000 | 12.96 → 12.96 | **SEALED** |
+| weights → bfloat16 (native: a no-op) | **0.0000** | 1.000 | 12.96 → 12.96 | **SEALED** — the true negative |
+| serve: top-p 0.95 | 0.1446 | 1.000 | 12.96 → **12.96** | CHANGED/major — serving-layer |
+| serve: temperature 1.05 | 0.0351 | 1.000 | 12.96 → 12.96 | CHANGED/minor |
+| weights → int8/tensor | 0.1244 | 0.857 | → 14.80 | CHANGED/major — weight-level |
+| ChatML template on a base model | 0.9459 | 0.016 | → 28.26 | CHANGED/major — template, certified KL ≥ 1.56 |
+| **Qwen3-0.6B silently served** | 0.3546 | 0.622 | → 19.33 | CHANGED/major |
+
+Two rows matter beyond the pattern repeating. The bfloat16 line is the true-negative
+test a monitoring tool must pass to be trusted with a pager: Qwen's weights are
+natively bf16, the "change" is an exact no-op, and the verdict is SEALED at exactly
+zero. And the last line is the silent-upgrade scenario providers actually perform —
+the next model generation behind the same tokenizer, caught at 0.35.
+
 ## API mode: endpoints you can only sample from
 
 Against a black-box API the full distribution is unavailable; the endpoint returns

@@ -1,0 +1,18 @@
+====================================================================================================
+E2E BATTERY, CURRENT ARCHITECTURE: Qwen/Qwen2.5-0.5B (37 probes, 1500 positions, D=256)
+====================================================================================================
+  reference: 1500 positions, vocab 151,936, perplexity 12.96, forward 17s
+
+  variant                    measurements                                  verdict
+  unchanged (re-run)         mean_h=0.0000  top1=1.000  ppl 12.96->12.96  kl>=0.000  -> SEALED/none  [behaviour unchanged]
+  weights -> bfloat16 (no-op) mean_h=0.0000  top1=1.000  ppl 12.96->12.96  kl>=0.000  -> SEALED/none  [behaviour unchanged]
+  serve: top-p 0.95          mean_h=0.1446  top1=1.000  ppl 12.96->12.96  kl>=0.000  -> CHANGED/major  [serving-layer sampling filter (tail-only)]
+  serve: temperature 1.05    mean_h=0.0351  top1=1.000  ppl 12.96->12.96  kl>=0.000  -> CHANGED/minor  [precision-level (dtype, kernels) or mild sampling parameter]
+  weights -> int8/tensor     mean_h=0.1244  top1=0.857  ppl 12.96->14.80  kl>=0.015  -> CHANGED/major  [weight-level change (quantisation, fine-tune, or related model)]
+  ChatML template applied    mean_h=0.9459  top1=0.016  ppl 12.96->28.26  kl>=1.562  -> CHANGED/major  [prompt/template mismatch]
+  Qwen3-0.6B served instead  mean_h=0.3546  top1=0.622  ppl 12.96->19.33  kl>=0.042  -> CHANGED/major  [weight-level change (quantisation, fine-tune, or related model)]
+  qwen vs gpt2               -> INCOMPARABLE  [vocab_size (151936 vs 50257)]
+
+====================================================================================================
+RESULT: every perturbation received the verdict its ground truth requires
+  (Qwen3 shares Qwen2.5's vocabulary size: True)
