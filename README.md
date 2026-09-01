@@ -175,6 +175,19 @@ miss; the committed outputs in `experiments/outputs/` are what the tables above 
 Verdict thresholds live in `servseal/verdict.py` with the calibration documented
 inline; changing them breaks tests until the documentation moves with them.
 
+## Commercial support
+
+The tool is MIT and stays that way. What is paid for is work and vigilance, not code:
+
+- **Deployment-fidelity audit** (fixed price): did your quantisation, serving-stack
+  migration or provider switch change the model's behaviour, where, and by how much? You
+  get the sealed reference, the verification runs, and a signed attestation report.
+- **Continuous attestation**: your endpoints re-verified on a schedule, with alerting
+  and a monthly report.
+
+Open an issue with the `audit` label, or reach the maintainer via the contact on their
+[GitHub profile](https://github.com/riscoss63).
+
 ## Licence
 
 MIT.
