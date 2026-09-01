@@ -112,7 +112,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: "3.11"}
-      - uses: riscoss63/servseal@v0.1.0
+      - uses: riscoss63/servseal@v0.1.1
         with:
           reference: seals/reference.seal.npz
           model: ./path-or-hf-id-of-what-you-serve

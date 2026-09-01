@@ -9,7 +9,7 @@
     verdict = classify(Snapshot.load("gpt2.seal.npz").compare(snapshot_model(served)))
     print(verdict.status, "-", verdict.signature)
 """
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from .probes import load_probes, probe_id          # noqa: E402
 from .snapshot import Snapshot                     # noqa: E402
