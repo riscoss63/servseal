@@ -19,9 +19,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Software Development :: Quality Assurance",
 ]
-# sqsketch 0.2.0 on PyPI predates the llm module this tool builds on; until 0.3.0 is
-# published, install it from source: pip install git+https://github.com/riscoss63/sqsketch
-dependencies = ["numpy>=1.21", "scipy>=1.7", "sqsketch>=0.2"]
+dependencies = ["numpy>=1.21", "scipy>=1.7", "sqsketch>=0.3"]
 
 [project.optional-dependencies]
 # Only snapshotting a model needs these. Verifying, reporting and testing verdict logic

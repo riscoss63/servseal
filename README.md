@@ -10,7 +10,7 @@ and later tells you whether the deployed behaviour is still the reference, **how
 it moved, and **which layer** moved it.
 
 ```bash
-pip install modelseal[model]      # needs sqsketch >= 0.3 (see note below)
+pip install modelseal[model]      # pulls sqsketch >= 0.3 from PyPI
 
 modelseal snapshot gpt2 -o reference.msl.npz
 # ... deploy, quantise, migrate serving stacks, wait six months ...
@@ -123,10 +123,6 @@ are established in the sqsketch paper: *Norm-Invariance in Vector-Symbolic Encod
 Probability Distributions* (DOI
 [10.5281/zenodo.22214969](https://doi.org/10.5281/zenodo.22214969), code
 [riscoss63/sqsketch](https://github.com/riscoss63/sqsketch)).
-
-> **Dependency note**: modelseal needs `sqsketch>=0.3` (the release with the LLM
-> fingerprint module). Until it is on PyPI:
-> `pip install git+https://github.com/riscoss63/sqsketch`.
 
 ## Audit it
 
