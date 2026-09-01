@@ -1,0 +1,20 @@
+====================================================================================================
+SAMPLING-MODE POWER on real GPT-2 distributions (1500 positions, vocab 50257)
+====================================================================================================
+  product path vs sweep path, same stream: S1 0.498622743 vs 0.498622743   S2 0.375600000 vs 0.375600000
+C:\Users\abdel\Documents\modelseal\experiments\sampling_power.py:48: RuntimeWarning: divide by zero encountered in log
+  lg = np.log(np.clip(P, 1e-300, None)) / t
+
+  bands: 200 calibration reps; FPR on 100 held-out null reps; power on 100 reps per change; family alpha 0.05
+
+ sampled tokens  per position     FPR     power: top-p 0.95power: temperature 1.05
+          1,500           1.0    0.04                  0.83                  0.88    (3s)
+          5,000           3.3    0.05                  1.00                  1.00    (3s)
+         15,000          10.0    0.02                  1.00                  1.00    (4s)
+         50,000          33.3    0.08                  1.00                  1.00    (5s)
+        150,000         100.0    0.05                  1.00                  1.00    (11s)
+
+  Reading: one sampled token = one max_tokens=1 completion on the probe
+  context. The spec for API mode is the smallest budget whose power column
+  reaches 0.95 at FPR <= alpha; below it, honesty requires saying the
+  change may go unseen. Weights mode needs none of this: it is exact.

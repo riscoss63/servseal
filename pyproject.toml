@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "modelseal"
+version = "0.1.0"
+description = "Behavioural attestation for deployed language models: is the model you serve the model you validated?"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+authors = [{ name = "riscoss63" }]
+keywords = ["llm", "attestation", "drift", "quantization", "fingerprint", "deployment"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Quality Assurance",
+]
+# sqsketch 0.2.0 on PyPI predates the llm module this tool builds on; until 0.3.0 is
+# published, install it from source: pip install git+https://github.com/riscoss63/sqsketch
+dependencies = ["numpy>=1.21", "scipy>=1.7", "sqsketch>=0.2"]
+
+[project.optional-dependencies]
+# Only snapshotting a model needs these. Verifying, reporting and testing verdict logic
+# work on saved snapshots with numpy alone.
+model = ["torch>=2.0", "transformers>=4.30"]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+modelseal = "modelseal.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/riscoss63/modelseal"
+
+[tool.setuptools]
+packages = ["modelseal"]
+
+[tool.setuptools.package-data]
+modelseal = ["probes/*.txt"]

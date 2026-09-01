@@ -1,0 +1,21 @@
+====================================================================================================
+E2E BATTERY: known perturbations, product-path verdicts (37 probes, 1500 positions, D=256)
+====================================================================================================
+  gpt2 reference: 1500 positions, vocab 50257, perplexity 27.83, forward 4s
+
+  variant                    measurements                                  verdict
+  unchanged (re-run)         mean_h=0.0000  top1=1.000  ppl 27.83->27.83  kl>=0.000  -> SEALED/none  [behaviour unchanged]
+  serve: top-p 0.95          mean_h=0.1537  top1=1.000  ppl 27.83->27.83  kl>=0.000  -> CHANGED/major  [serving-layer sampling filter (tail-only)]
+  serve: temperature 1.05    mean_h=0.0425  top1=1.000  ppl 27.83->27.83  kl>=0.000  -> CHANGED/minor  [precision-level (dtype, kernels) or mild sampling parameter]
+  weights -> bfloat16        mean_h=0.0352  top1=0.961  ppl 27.83->27.68  kl>=0.000  -> CHANGED/minor  [precision-level (dtype, kernels) or mild sampling parameter]
+  weights -> int8/tensor     mean_h=0.1684  top1=0.773  ppl 27.83->32.03  kl>=0.000  -> CHANGED/major  [weight-level change (quantisation, fine-tune, or related model)]
+  wrong chat template        mean_h=0.9072  top1=0.037  ppl 27.83->35.10  kl>=1.379  -> CHANGED/major  [prompt/template mismatch]
+  distilgpt2 substituted     mean_h=0.2720  top1=0.628  ppl 27.83->44.04  kl>=0.017  -> CHANGED/major  [weight-level change (quantisation, fine-tune, or related model)]
+
+  second architecture (pythia-160m):
+  unchanged (re-run)         mean_h=0.0000  top1=1.000  ppl 26.13->26.13  kl>=0.000  -> SEALED/none  [behaviour unchanged]
+  serve: top-p 0.95          mean_h=0.1520  top1=1.000  ppl 26.13->26.13  kl>=0.000  -> CHANGED/major  [serving-layer sampling filter (tail-only)]
+  pythia vs gpt2             -> INCOMPARABLE  [vocab_size (50304 vs 50257)]
+
+====================================================================================================
+RESULT: every perturbation received the verdict its ground truth requires
